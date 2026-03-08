@@ -7,7 +7,7 @@ const router = Router();
 // Login
 router.post('/login', login);
 
-// Registrar
+// Registrar usuarios
 router.post('/register', register);
 
 // Obtener perfil (protegido)

@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import userRoutes from './routes/userRoutes.js';
 import registroRoutes from './routes/registroRoutes.js';
+import asistenciaRoute from './routes/asistenciaRoute.js';
 
 const app = express();
 app.use(cors());
@@ -11,6 +12,7 @@ app.use(bodyParser.json());
 // Rutas
 app.use('/api', userRoutes);
 app.use('/api/material', registroRoutes);
+app.use('/api/asistencia', asistenciaRoute)
 
 // Levantar servidor
 app.listen(3000, '0.0.0.0', () => {
