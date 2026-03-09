@@ -39,7 +39,7 @@ export default class User {
   return new Promise((resolve, reject) => {
     db.query(
       // 'SELECT id_usuario, dni, primernombre, segundo_nombre, primer_apellido, segundo_apellido, correo, nro_telefono, id_distrito, id_cargo FROM tb_user WHERE id_usuario = ?',
-      `SELECT id_usuario,dni,primernombre,segundo_nombre,primer_apellido,segundo_apellido,nro_telefono,correo,distrito,cargo,area,DATE_FORMAT(fecha_registro, '%Y-%m-%d') AS fecha_registro
+      `SELECT id_usuario,dni,primernombre,segundo_nombre,primer_apellido,segundo_apellido,nro_telefono,correo,contraseña,distrito,cargo,area,DATE_FORMAT(fecha_registro, '%Y-%m-%d') AS fecha_registro
 FROM tb_user tb1
 INNER JOIN tb_distrito tb2 ON (tb1.id_distrito = tb2.id)
 INNER JOIN tb_cargo tb3 ON (tb1.id_cargo = tb3.id) 
@@ -72,5 +72,41 @@ INNER JOIN tb_user tb4 ON (tb1.id_user = tb4.id_usuario) WHERE tb1.id_user = ?;
     });
   }
 
+  static updateProfile(userId, { correo, nro_telefono }) {
+  return new Promise((resolve, reject) => {
+    // Si queremos actualizar AMBOS o SOLO UNO, construimos la query dinámicamente
+    let sql = "UPDATE tb_user SET ";
+    let fields = [];
+    let values = [];
+
+    if (correo) {
+      sql += "correo = ?, ";
+      values.push(correo);
+    }
+    if (nro_telefono) {
+      sql += "nro_telefono = ?, ";
+      values.push(nro_telefono);
+    }
+
+    sql = sql.slice(0, -2);
+    sql += " WHERE id_usuario = ?";
+    values.push(userId);
+
+    db.query(sql, values, (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+}
+
+  static updatePassword(userId, newHashedPassword) {
+  return new Promise((resolve, reject) => {
+    const sql = `UPDATE tb_user SET contraseña = ? WHERE id_usuario = ?`;
+    db.query(sql, [newHashedPassword, userId], (err, results) => {
+      if (err) reject(err);
+      else resolve(results);
+    });
+  });
+}
 }
 

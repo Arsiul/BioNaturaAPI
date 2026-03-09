@@ -83,3 +83,39 @@ export const getDatesByUser = async (req, res) => {
     res.status(500).json({ msg: 'Error al obtener los registros del usuario' });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { correo, nro_telefono } = req.body;
+
+    if (!correo && !nro_telefono) {
+      return res.status(400).json({ msg: 'No se enviaron datos para actualizar' });
+    }
+
+    await User.updateProfile(userId, { correo, nro_telefono });
+    res.json({ msg: 'Perfil actualizado con éxito' });
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const { oldPassword, newPassword } = req.body;
+
+    // 1. Obtener usuario para verificar contraseña actual
+    const users = await User.findById(userId);
+    if (!bcrypt.compareSync(oldPassword, users[0].contraseña)) {
+      return res.status(401).json({ msg: 'Contraseña actual incorrecta' });
+    }
+
+    // 2. Hash de la nueva y guardar
+    const hashedPassword = bcrypt.hashSync(newPassword, 8);
+    await User.updatePassword(userId, hashedPassword);
+    res.json({ msg: 'Contraseña actualizada' });
+  } catch (err) {
+    res.status(500).json({ msg: err.message });
+  }
+};
