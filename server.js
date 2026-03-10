@@ -6,6 +6,8 @@ import userRoutes from './routes/userRoutes.js';
 import registroRoutes from './routes/registroRoutes.js';
 import asistenciaRoute from './routes/asistenciaRoute.js';
 
+dotenv.config();
+
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
