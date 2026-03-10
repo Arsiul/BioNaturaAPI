@@ -18,6 +18,7 @@ app.use('/api/material', registroRoutes);
 app.use('/api/asistencia', asistenciaRoute)
 
 // Levantar servidor
-app.listen(process.env.DB_PORT, '0.0.0.0', () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
   console.log('Servidor corriendo en puerto 3000');
 });
