@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -15,6 +16,6 @@ app.use('/api/material', registroRoutes);
 app.use('/api/asistencia', asistenciaRoute)
 
 // Levantar servidor
-app.listen(3000, '0.0.0.0', () => {
+app.listen(process.env.DB_PORT, '0.0.0.0', () => {
   console.log('Servidor corriendo en puerto 3000');
 });
